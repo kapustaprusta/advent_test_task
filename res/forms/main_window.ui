@@ -10,22 +10,117 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QWidget" name="central_widget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QGraphicsView" name="field_view">
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="transformationAnchor">
+       <enum>QGraphicsView::AnchorViewCenter</enum>
+      </property>
+      <property name="resizeAnchor">
+       <enum>QGraphicsView::AnchorViewCenter</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="status_bar"/>
+  <widget class="QMenuBar" name="menu_bar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="action_generate_field"/>
+    <addaction name="separator"/>
+    <addaction name="action_save_field"/>
+    <addaction name="action_load_field"/>
+   </widget>
+   <widget class="QMenu" name="menu_preferences">
+    <property name="title">
+     <string>Preferences</string>
+    </property>
+    <addaction name="action_settings"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_preferences"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_generate_field">
+   <property name="icon">
+    <iconset resource="../path_finder.qrc">
+     <normaloff>:/path_finder/icons/generate_field.png</normaloff>:/path_finder/icons/generate_field.png</iconset>
+   </property>
+   <property name="text">
+    <string>Generate field</string>
+   </property>
+  </action>
+  <action name="action_save_field">
+   <property name="icon">
+    <iconset resource="../path_finder.qrc">
+     <normaloff>:/path_finder/icons/save_field.png</normaloff>:/path_finder/icons/save_field.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save field</string>
+   </property>
+  </action>
+  <action name="action_load_field">
+   <property name="icon">
+    <iconset resource="../path_finder.qrc">
+     <normaloff>:/path_finder/icons/load_field.png</normaloff>:/path_finder/icons/load_field.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load field</string>
+   </property>
+  </action>
+  <action name="action_settings">
+   <property name="icon">
+    <iconset resource="../path_finder.qrc">
+     <normaloff>:/path_finder/icons/settings.png</normaloff>:/path_finder/icons/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../path_finder.qrc"/>
+ </resources>
  <connections/>
 </ui>

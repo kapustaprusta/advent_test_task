@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/path_finder">
+        <file>icons/generate_field.png</file>
+        <file>icons/load_field.png</file>
+        <file>icons/save_field.png</file>
+        <file>icons/settings.png</file>
+    </qresource>
+</RCC>
