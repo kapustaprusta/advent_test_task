@@ -8,6 +8,8 @@
 #include "ui_main_window.h"
 #include "../cell_item/cell_item.h"
 #include "../randomizer/randomizer.h"
+#include "../settings_window/settings_window.h"
+#include "../settings_manager/settings_manager.h"
 
 namespace main_window
 {
@@ -18,10 +20,11 @@ class MainWindow final : public QMainWindow
 
 public:
     explicit MainWindow(QWidget* parent = Q_NULLPTR);
-            ~MainWindow() = default;
+            ~MainWindow();
 
 public slots:
     void GenerateField();
+    void ReceiveAppSettings(const defs::AppSettings& app_settings);
 
 private:
     Ui::main_window ui_;
@@ -32,7 +35,15 @@ private:
     QGraphicsScene*               field_scene_;
     QList<QList<cell::CellItem*>> cell_items_;
 
-    std::unique_ptr<random::Randomizer> randomizer_;
+    settings::SettingsManager*                 settings_manager_;
+    std::unique_ptr<random::Randomizer>        randomizer_;
+    std::unique_ptr<settings::SettingsWindow>  settings_window_;
+
+    defs::AppSettings      app_settings_;
+    defs::WindowProperties window_props_;
+
+    void InitFields();
+    void MakeConnections();
 };
 
 } // main_window

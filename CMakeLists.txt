@@ -25,6 +25,12 @@ set(SOURCES
     src/main_window/main_window.h
     src/main_window/main_window.cpp
 
+    src/settings_window/settings_window.h
+    src/settings_window/settings_window.cpp
+
+    src/settings_manager/settings_manager.h
+    src/settings_manager/settings_manager.cpp
+
     src/cell_item/cell_item.h
     src/cell_item/cell_item.cpp
     
@@ -35,8 +41,11 @@ set(SOURCES
 )
 
 # qt5
-qt5_add_resources(SOURCES res/path_finder.qrc     )
-qt5_wrap_ui      (SOURCES res/forms/main_window.ui)
+qt5_add_resources(SOURCES res/path_finder.qrc)
+
+qt5_wrap_ui(SOURCES res/forms/main_window.ui
+                    res/forms/settins_window.ui
+)
 
 # executable
 add_executable(path_finder ${GUI_TYPE} ${SOURCES} res/path_finder.rc)

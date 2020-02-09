@@ -1,0 +1,38 @@
+#pragma once
+
+#include <QAction>
+
+#include "ui_settings_window.h"
+#include "../defs/defs.h"
+
+namespace settings
+{
+
+class SettingsWindow final : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit SettingsWindow(const defs::AppSettings& app_settings, QWidget* parent = Q_NULLPTR);
+            ~SettingsWindow() = default;
+
+public slots:
+    void ChooseDatabaseFile();
+    void ApplyButtonClicked();
+
+signals:
+    void SendAppSettings(const defs::AppSettings& app_settings);
+
+private:
+    Ui::settings_window ui_;
+
+    QString  default_directory_;
+    QAction* action_choose_database_file_;
+
+    void InitFields(const defs::AppSettings& app_settings);
+    void MakeConnections();
+
+    defs::AppSettings ReadSettingsFromUi();
+};
+
+} // settings

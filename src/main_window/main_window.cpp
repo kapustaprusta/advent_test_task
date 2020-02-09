@@ -10,47 +10,77 @@ MainWindow::MainWindow(QWidget* parent)
     ui_.setupUi(this);
 
     setWindowTitle(app_name_ + " " + app_ver_);
+     
+    InitFields();
+    MakeConnections();
+}
 
-    field_scene_ = new QGraphicsScene(this);
-    randomizer_  = std::make_unique<random::Randomizer>(std::uniform_int_distribution<>(0, 1));
-
-    field_scene_->setSceneRect(0, 0, 0, 0);
-    ui_.field_view->setScene(field_scene_);
-
-    connect(ui_.action_generate_field, SIGNAL(triggered()), this, SLOT(GenerateField()));
+MainWindow::~MainWindow()
+{
+    settings_manager_->WriteAppSettings(app_settings_);
+    settings_manager_->WriteWindowProperties(window_props_);
 }
 
 void MainWindow::GenerateField()
 {
-    auto size  = QSize (9, 9);
-    auto coord = QPoint(0, 0);
-    
+    auto coord  = QPoint(0, 0);
     auto colors = defs::Colors{};
 
-    for (int row = 0; row < 100; row++)
+    cell_items_.clear();
+    field_scene_->clear();
+
+    for (int row = 0; row < app_settings_.cells_counter; row++)
     {
         QList<cell::CellItem*> cells;
-
-        for (int col = 0; col < 100; col++)
+        for (int col = 0; col < app_settings_.cells_counter; col++)
         {
             coord.setX(col);
             coord.setY(row);
 
             if (randomizer_->GetRandomValue())
             {
-                cells.append(new cell::CellItem(size, coord, colors.black, field_scene_));
+                cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, colors.black, field_scene_));
             }
             else
             {
-                cells.append(new cell::CellItem(size, coord, colors.white, field_scene_));
+                cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, colors.white, field_scene_));
             }
 
             field_scene_->addItem(cells.back());
-            cells.back()->setPos(-500 + size.width() * col, -500 + size.height() * row);
-
-            cell_items_.append(cells);
+            cells.back()->setPos(app_settings_.cell_size * col, app_settings_.cell_size * row);
         }
+
+        cell_items_.append(cells);
     }
+}
+
+void MainWindow::ReceiveAppSettings(const defs::AppSettings& app_settings)
+{
+    app_settings_ = app_settings;
+    ui_.status_bar->showMessage(QString("settings applied"), 2000);
+}
+
+void MainWindow::InitFields()
+{
+    settings_manager_ = settings::SettingsManager::MakeInstance();
+    settings_manager_->Initialize();
+
+    app_settings_     = settings_manager_->ReadAppSettings();
+    window_props_     = settings_manager_->ReadWindowProperties();
+    randomizer_       = std::make_unique<random::Randomizer>(std::uniform_int_distribution<>(0, 1));
+    settings_window_  = std::make_unique<settings::SettingsWindow>(app_settings_);
+
+    field_scene_ = new QGraphicsScene(this);
+    field_scene_->setSceneRect(0, 0, 0, 0);
+    ui_.field_view->setScene(field_scene_);
+}
+
+void MainWindow::MakeConnections()
+{
+    connect(ui_.action_generate_field, SIGNAL(triggered()), this, SLOT(GenerateField()));
+    connect(ui_.action_settings, SIGNAL(triggered()), settings_window_.get(), SLOT(exec()));
+
+    connect(settings_window_.get(), SIGNAL(SendAppSettings(const defs::AppSettings&)), this, SLOT(ReceiveAppSettings(const defs::AppSettings&)));
 }
 
 } // main_window

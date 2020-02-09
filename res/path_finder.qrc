@@ -4,5 +4,6 @@
         <file>icons/load_field.png</file>
         <file>icons/save_field.png</file>
         <file>icons/settings.png</file>
+        <file>icons/open_folder.png</file>
     </qresource>
 </RCC>
