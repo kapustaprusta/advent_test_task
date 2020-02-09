@@ -46,7 +46,7 @@ set(SOURCES
 
 # copy files
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/database)
-configure_file(res/database/fields.db ${CMAKE_BINARY_DIR}/database/fields.db COPYONLY)
+configure_file(res/database/field.sqlite ${CMAKE_BINARY_DIR}/database/field.sqlite COPYONLY)
 
 # qt5
 qt5_add_resources(SOURCES res/path_finder.qrc)

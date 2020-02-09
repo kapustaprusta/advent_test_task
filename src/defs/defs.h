@@ -9,6 +9,12 @@
 namespace defs
 {
 
+enum class Color
+{
+    BLACK = 0,
+    WHITE
+};
+
 struct Colors
 {
     Colors() = default;
@@ -38,7 +44,7 @@ struct FieldModel
 {
     FieldModel() = default;
 
-    QList<QColor> colors;
+    QList<Color> colors;
 
 };
 

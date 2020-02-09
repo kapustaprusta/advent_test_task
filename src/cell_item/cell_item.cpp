@@ -3,12 +3,13 @@
 namespace cell
 {
 
-CellItem::CellItem(const QSize& size, const QPoint& coordinates, const QColor& color, QObject* parent)
+CellItem::CellItem(const QSize& size, const QPoint& coordinates, const defs::Color& color, QObject* parent)
     : QObject(parent)
 {
     size_        = size;
     color_       = color;
     coordinates_ = coordinates;
+    colors_      = defs::Colors{};
 }
 
 QRectF CellItem::boundingRect() const
@@ -18,11 +19,20 @@ QRectF CellItem::boundingRect() const
 
 void CellItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->setBrush(color_);
+    switch (color_)
+    {
+        case defs::Color::BLACK:
+            painter->setBrush(colors_.black);
+            break;
+        case defs::Color::WHITE:
+            painter->setBrush(colors_.white);
+            break;
+    }
+    
     painter->drawRect(0, 0, size_.width(), size_.height());
 }
 
-QColor CellItem::GetColor()
+defs::Color CellItem::GetColor()
 {
     return color_;
 }

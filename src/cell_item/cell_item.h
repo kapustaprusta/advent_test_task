@@ -6,6 +6,8 @@
 #include <QPainter>
 #include <QGraphicsItem>
 
+#include "../defs/defs.h"
+
 namespace cell
 {
 
@@ -14,17 +16,19 @@ class CellItem final : public QObject, public QGraphicsItem
     Q_OBJECT
 
 public:
-    explicit CellItem(const QSize& size, const QPoint& coordinates, const QColor& color, QObject* parent = Q_NULLPTR);
+    explicit CellItem(const QSize& size, const QPoint& coordinates, const defs::Color& color, QObject* parent = Q_NULLPTR);
             ~CellItem() = default;
 
-    QColor GetColor();
+    defs::Color GetColor();
     QSize  GetSize();
     QPoint GetCoordinates();
 
 private:
-    QSize  size_;
-    QColor color_;
-    QPoint coordinates_;
+    QSize       size_;
+    QPoint      coordinates_;
+    defs::Color color_;
+
+    defs::Colors colors_;
 
     //void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 

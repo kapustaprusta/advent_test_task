@@ -28,8 +28,10 @@ void MainWindow::GenerateField()
     auto coord  = QPoint(0, 0);
     auto colors = defs::Colors{};
 
+    field_scene_ = new QGraphicsScene(this);
+    field_scene_->setSceneRect(0, 0, 0, 0);
+    ui_.field_view->setScene(field_scene_);
     cell_items_.clear();
-    field_scene_->clear();
 
     for (int row = 0; row < app_settings_.cells_counter; row++)
     {
@@ -39,14 +41,7 @@ void MainWindow::GenerateField()
             coord.setX(col);
             coord.setY(row);
 
-            if (randomizer_->GetRandomValue())
-            {
-                cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, colors.black, field_scene_));
-            }
-            else
-            {
-                cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, colors.white, field_scene_));
-            }
+            cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, defs::Color(randomizer_->GetRandomValue()), field_scene_));
 
             field_scene_->addItem(cells.back());
             cells.back()->setPos(app_settings_.cell_size * col, app_settings_.cell_size * row);
