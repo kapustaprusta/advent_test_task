@@ -18,6 +18,7 @@ include_directories(${CMAKE_BINARY_DIR})
 find_package(Qt5Core    REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui     REQUIRED)
+find_package(Qt5Sql     REQUIRED)
 
 set(SOURCES
     main.cpp
@@ -31,6 +32,9 @@ set(SOURCES
     src/settings_manager/settings_manager.h
     src/settings_manager/settings_manager.cpp
 
+    src/database_proxy/database_proxy.h
+    src/database_proxy/database_proxy.cpp
+
     src/cell_item/cell_item.h
     src/cell_item/cell_item.cpp
     
@@ -39,6 +43,10 @@ set(SOURCES
 
     src/defs/defs.h
 )
+
+# copy files
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/database)
+configure_file(res/database/fields.db ${CMAKE_BINARY_DIR}/database/fields.db COPYONLY)
 
 # qt5
 qt5_add_resources(SOURCES res/path_finder.qrc)
@@ -55,6 +63,7 @@ set_target_properties(path_finder PROPERTIES OUTPUT_NAME "Path Finder")
 target_link_libraries(path_finder PUBLIC Qt5::Core
                                   PUBLIC Qt5::Widgets
                                   PUBLIC Qt5::Gui
+                                  PUBLIC Qt5::Sql
 )
 
 # deploy

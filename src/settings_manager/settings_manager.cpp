@@ -6,7 +6,7 @@ namespace settings
 SettingsManager* SettingsManager::p_instance_;
 QMutex           SettingsManager::make_instance_mutex_;
 
-void SettingsManager::Initialize(QString org, QString app)
+void SettingsManager::Initialize(const QString& org, const QString& app)
 {
     org_ = org;
     app_ = app;
@@ -92,12 +92,12 @@ defs::WindowProperties SettingsManager::ReadWindowProperties() const
     return window_properties;
 }
 
-void SettingsManager::SetOrganizationName(QString& org)
+void SettingsManager::SetOrganizationName(const QString& org)
 { 
     org_ = org;
 }
 
-void SettingsManager::SetApplicationName(QString& app)
+void SettingsManager::SetApplicationName(const QString& app)
 {
     app_ = app;
 }

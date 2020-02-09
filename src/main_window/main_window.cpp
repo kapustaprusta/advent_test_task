@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     settings_manager_->WriteAppSettings(app_settings_);
-    settings_manager_->WriteWindowProperties(window_props_);
+    settings_manager_->WriteWindowProperties(defs::WindowProperties{size(), pos()});
 }
 
 void MainWindow::GenerateField()
@@ -65,10 +65,14 @@ void MainWindow::InitFields()
     settings_manager_ = settings::SettingsManager::MakeInstance();
     settings_manager_->Initialize();
 
-    app_settings_     = settings_manager_->ReadAppSettings();
-    window_props_     = settings_manager_->ReadWindowProperties();
+    app_settings_           = settings_manager_->ReadAppSettings();
+    const auto window_props = settings_manager_->ReadWindowProperties();
+
+    resize(window_props.size);
+    move(window_props.position);
+
     randomizer_       = std::make_unique<random::Randomizer>(std::uniform_int_distribution<>(0, 1));
-    settings_window_  = std::make_unique<settings::SettingsWindow>(app_settings_);
+    settings_window_  = std::make_unique<settings::SettingsWindow>(app_name_, app_ver_, app_settings_);
 
     field_scene_ = new QGraphicsScene(this);
     field_scene_->setSceneRect(0, 0, 0, 0);

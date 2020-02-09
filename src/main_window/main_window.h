@@ -39,8 +39,7 @@ private:
     std::unique_ptr<random::Randomizer>        randomizer_;
     std::unique_ptr<settings::SettingsWindow>  settings_window_;
 
-    defs::AppSettings      app_settings_;
-    defs::WindowProperties window_props_;
+    defs::AppSettings app_settings_;
 
     void InitFields();
     void MakeConnections();

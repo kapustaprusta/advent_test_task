@@ -13,7 +13,7 @@ class SettingsWindow final : public QDialog
     Q_OBJECT
 
 public:
-    explicit SettingsWindow(const defs::AppSettings& app_settings, QWidget* parent = Q_NULLPTR);
+    explicit SettingsWindow(const QString& app_name, const QString& app_ver, const defs::AppSettings& app_settings, QWidget* parent = Q_NULLPTR);
             ~SettingsWindow() = default;
 
 public slots:
@@ -26,10 +26,13 @@ signals:
 private:
     Ui::settings_window ui_;
 
-    QString  default_directory_;
+    QString app_name_;
+    QString app_ver_;
+    QString default_directory_;
+
     QAction* action_choose_database_file_;
 
-    void InitFields(const defs::AppSettings& app_settings);
+    void InitFields(const QString& app_name, const QString& app_ver, const defs::AppSettings& app_settings);
     void MakeConnections();
 
     defs::AppSettings ReadSettingsFromUi();

@@ -10,12 +10,14 @@
 namespace settings
 {
 
-SettingsWindow::SettingsWindow(const defs::AppSettings& app_settings, QWidget* parent)
+SettingsWindow::SettingsWindow(const QString& app_name, const QString& app_ver,const defs::AppSettings& app_settings, QWidget* parent)
     : QDialog(parent)
 {
     ui_.setupUi(this);
 
-    InitFields(app_settings);
+    setWindowTitle(app_name + " " + app_ver);
+
+    InitFields(app_name, app_ver, app_settings);
     MakeConnections();
 }
 
@@ -37,7 +39,7 @@ void SettingsWindow::ApplyButtonClicked()
     QFile db_test_file(app_settings.path_to_db);
     if (!db_test_file.open(QFile::ReadOnly))
     {
-        QMessageBox::warning(this, QString(tr("Path Finder")), QString(tr("invalid path to database")));
+        QMessageBox::warning(this, app_name_ + " " + app_ver_, QString(tr("invalid path to database")));
         return;
     }
     db_test_file.close();
@@ -57,12 +59,14 @@ defs::AppSettings SettingsWindow::ReadSettingsFromUi()
     return app_settings;
 }
 
-void SettingsWindow::InitFields(const defs::AppSettings& app_settings)
+void SettingsWindow::InitFields(const QString& app_name, const QString& app_ver, const defs::AppSettings& app_settings)
 {
+    app_name_          = app_name;
+    app_ver_           = app_ver;
     default_directory_ = app_settings.path_to_db;
 
     ui_.cell_size_line_edit->setText(QString::number(app_settings.cell_size));
-    ui_.cell_size_line_edit->setValidator(new QRegExpValidator(QRegExp("[1-9]"), ui_.cell_size_line_edit));
+    ui_.cell_size_line_edit->setValidator(new QRegExpValidator(QRegExp("[2-9]"), ui_.cell_size_line_edit));
 
     ui_.cells_counter_line_edit->setText(QString::number(app_settings.cells_counter));
     ui_.cells_counter_line_edit->setValidator(new QRegExpValidator(QRegExp("[0-9]{3}"), ui_.cells_counter_line_edit));

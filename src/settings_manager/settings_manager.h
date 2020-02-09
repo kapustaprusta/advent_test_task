@@ -26,7 +26,7 @@ public:
         return p_instance_;
     }
 
-    void Initialize(QString org = "TEST", QString app = "Path Finder");
+    void Initialize(const QString& org = "TEST", const QString& app = "Path Finder");
 
     SettingsManager(const SettingsManager&) = delete;
     SettingsManager(const SettingsManager&&) = delete;
@@ -40,8 +40,8 @@ public:
     defs::WindowProperties ReadWindowProperties() const;
     defs::AppSettings ReadAppSettings();
 
-    void SetOrganizationName(QString& org);
-    void SetApplicationName(QString& app);
+    void SetOrganizationName(const QString& org);
+    void SetApplicationName(const QString& app);
 
     QString GetOrganizationName() const;
     QString GetApplicationName() const;

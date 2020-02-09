@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QSize>
+#include <QList>
 #include <QPoint>
 #include <QColor>
 #include <QString>
@@ -31,6 +32,15 @@ struct WindowProperties
 
     QSize  size    { 800, 600 };
     QPoint position{ 200, 200 };
+};
+
+struct FieldModel
+{
+    FieldModel() = default;
+
+    int id{0};
+    QList<QList<QColor>> values;
+
 };
 
 }
