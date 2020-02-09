@@ -22,4 +22,19 @@ void CellItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, 
     painter->drawRect(0, 0, size_.width(), size_.height());
 }
 
+QColor CellItem::GetColor()
+{
+    return color_;
+}
+
+QSize CellItem::GetSize()
+{
+    return size_;
+}
+
+QPoint CellItem::GetCoordinates()
+{
+    return coordinates_;
+}
+
 } // cell

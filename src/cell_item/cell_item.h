@@ -17,6 +17,10 @@ public:
     explicit CellItem(const QSize& size, const QPoint& coordinates, const QColor& color, QObject* parent = Q_NULLPTR);
             ~CellItem() = default;
 
+    QColor GetColor();
+    QSize  GetSize();
+    QPoint GetCoordinates();
+
 private:
     QSize  size_;
     QColor color_;

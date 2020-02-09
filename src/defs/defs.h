@@ -23,7 +23,7 @@ struct AppSettings
 
     int     cell_size    {  5};
     int     cells_counter{100};
-    QString path_to_db   { ""};
+    QString path_to_db   {"database/field.db"};
 };
 
 struct WindowProperties
@@ -38,8 +38,7 @@ struct FieldModel
 {
     FieldModel() = default;
 
-    int id{0};
-    QList<QList<QColor>> values;
+    QList<QColor> colors;
 
 };
 
