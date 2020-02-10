@@ -8,6 +8,14 @@
 namespace defs
 {
 
+enum class CellType
+{
+    START = 0,
+    FINISH,
+    ROUTE,
+    DEFAULT
+};
+
 enum class Color
 {
     BLACK = 0,
