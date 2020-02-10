@@ -1,4 +1,6 @@
-﻿#include "cell_item.h"
+﻿#include <QGraphicsSceneMouseEvent>
+
+#include "cell_item.h"
 
 namespace cell
 {
@@ -39,6 +41,21 @@ void CellItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, 
     }
     
     painter->drawRect(0, 0, size_.width(), size_.height());
+}
+
+void CellItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+        color_ = defs::Color::YELLOW;
+    }
+    else if (event->button() == Qt::LeftButton)
+    {
+        color_ = defs::Color::GREEN;
+    }
+
+    update();
+    QGraphicsItem::mousePressEvent(event);
 }
 
 defs::Color CellItem::GetColor() const

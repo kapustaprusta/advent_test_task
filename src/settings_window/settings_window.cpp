@@ -64,7 +64,7 @@ void SettingsWindow::InitFields(const QString& app_name, const QString& app_ver,
     default_directory_ = app_settings.path_to_db;
 
     ui_.cell_size_line_edit->setText(QString::number(app_settings.cell_size));
-    ui_.cell_size_line_edit->setValidator(new QRegExpValidator(QRegExp("[2-9]"), ui_.cell_size_line_edit));
+    ui_.cell_size_line_edit->setValidator(new QRegExpValidator(QRegExp("[0-9]{2}"), ui_.cell_size_line_edit));
 
     ui_.cells_counter_line_edit->setText(QString::number(app_settings.cells_counter));
     ui_.cells_counter_line_edit->setValidator(new QRegExpValidator(QRegExp("[0-9]{3}"), ui_.cells_counter_line_edit));
