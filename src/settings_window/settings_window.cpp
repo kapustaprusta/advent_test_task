@@ -36,19 +36,17 @@ void SettingsWindow::ApplyButtonClicked()
 {   
     const auto app_settings = ReadSettingsFromUi();
 
-    QFile db_test_file(app_settings.path_to_db);
-    if (!db_test_file.open(QFile::ReadOnly))
+    if (!QFile::exists(app_settings.path_to_db))
     {
         QMessageBox::warning(this, app_name_ + " " + app_ver_, QString(tr("invalid path to database")));
         return;
     }
-    db_test_file.close();
 
     SendAppSettings(app_settings);
     close();
 }
 
-defs::AppSettings SettingsWindow::ReadSettingsFromUi()
+defs::AppSettings SettingsWindow::ReadSettingsFromUi() const
 {
     defs::AppSettings app_settings{};
 

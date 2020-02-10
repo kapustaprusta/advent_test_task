@@ -14,7 +14,7 @@ class SettingsWindow final : public QDialog
 
 public:
     explicit SettingsWindow(const QString& app_name, const QString& app_ver, const defs::AppSettings& app_settings, QWidget* parent = Q_NULLPTR);
-            ~SettingsWindow() = default;
+    ~SettingsWindow() = default;
 
 public slots:
     void ChooseDatabaseFile();
@@ -35,7 +35,7 @@ private:
     void InitFields(const QString& app_name, const QString& app_ver, const defs::AppSettings& app_settings);
     void MakeConnections();
 
-    defs::AppSettings ReadSettingsFromUi();
+    defs::AppSettings ReadSettingsFromUi() const;
 };
 
 } // settings

@@ -9,12 +9,12 @@ class Randomizer
 {
 public:
     explicit Randomizer(const std::uniform_int_distribution<int>& distribution);
-            ~Randomizer() = default;
+    ~Randomizer() = default;
 
     void SetDistribution(const std::uniform_int_distribution<int>& distribution);
-    std::uniform_int_distribution<int> GetDistribution();
+    std::uniform_int_distribution<int> GetDistribution() const;
 
-    int GetRandomValue();
+    int GetRandomValue() const;
 
 private:
     std::uniform_int_distribution<int> distribution_;

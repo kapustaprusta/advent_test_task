@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QMutex>
-#include <QString>
 #include <QSettings>
 #include <QMutexLocker>
 

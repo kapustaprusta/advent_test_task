@@ -1,5 +1,3 @@
-#include <QMutexLocker>
-
 #include "database_proxy.h"
 
 namespace database
@@ -19,14 +17,9 @@ bool DatabaseProxy::Init(const QString& db_type, const QString& db_url)
 {
     QMutexLocker ml(&db_mutex_);
 
-    if (db_type.isEmpty() || db_url.isEmpty())
+    if (db_type.isEmpty() || db_url.isEmpty() || is_init_.load())
     {
         return false;
-    }
-
-    if (db_.isOpen())
-    {
-        db_.close();
     }
 
     db_ = QSqlDatabase::addDatabase(db_type);
@@ -45,42 +38,34 @@ bool DatabaseProxy::Create(const defs::FieldModel& model)
         return false;
     }
 
-    auto query     = QSqlQuery(db_);
-    auto query_str = QString("INSERT INTO field(id, values) VALUES (%1, %2);");
+          auto query     = QSqlQuery(db_);
+    const auto query_str = QString("INSERT INTO field(id, colors) VALUES (%1, '%2');");
 
-    QString values;
-    for (const auto& color : model.colors)
-    {
-        values.append(QString::number(int(color)));
-    }
+    const auto prepared_query_str = query_str.arg(QString::number(0)).arg(model.colors);
+    const auto is_ok              = query.exec(prepared_query_str);
 
-    const auto prepared_query_str = query_str.arg(QString::number(0)).arg(values);
-    const auto isOk = query.exec(prepared_query_str);
-
-    qDebug() << prepared_query_str;
-
-    return isOk;
+    return is_ok;
 }
 
 bool DatabaseProxy::Read(defs::FieldModel& model)
 {
     QMutexLocker ml(&db_mutex_);
 
-    auto query     = QSqlQuery(db_);
-    auto query_str = QString("SELECT * FROM field;");
+          auto query     = QSqlQuery(db_);
+    const auto query_str = QString("SELECT * FROM field;");
 
     if (!is_init_.load() || !query.exec(query_str))
     {
         return false;
     }
 
-    auto sql_record = query.record();
-    while (query.next())
+    const auto sql_record = query.record();
+    if (query.next())
     {
-        qDebug() << query.value(sql_record.indexOf("values")).toString();
+        model.colors = query.value(sql_record.indexOf("colors")).toString();
     }
 
-    return query.size() > 0;
+    return !sql_record.isEmpty();
 }
 
 bool DatabaseProxy::Delete()
@@ -92,8 +77,8 @@ bool DatabaseProxy::Delete()
         return false;
     }
 
-    auto query     = QSqlQuery(db_);
-    auto query_str = QString("DELETE FROM field");
+          auto query     = QSqlQuery(db_);
+    const auto query_str = QString("DELETE FROM field");
 
     return query.exec(query_str);
 }

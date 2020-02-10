@@ -15,12 +15,12 @@ void Randomizer::SetDistribution(const std::uniform_int_distribution<int>& distr
     distribution_ = distribution;
 }
 
-std::uniform_int_distribution<int> Randomizer::GetDistribution()
+std::uniform_int_distribution<int> Randomizer::GetDistribution() const
 {
     return distribution_;
 }
 
-int Randomizer::GetRandomValue()
+int Randomizer::GetRandomValue() const
 {
     return distribution_(*QRandomGenerator::global());
 }

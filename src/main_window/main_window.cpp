@@ -23,25 +23,31 @@ MainWindow::~MainWindow()
     settings_manager_->WriteWindowProperties(defs::WindowProperties{size(), pos()});
 }
 
-void MainWindow::GenerateField()
+void MainWindow::GenerateField(const defs::FieldModel& field_model)
 {
     auto coord  = QPoint(0, 0);
     auto colors = defs::Colors{};
 
-    field_scene_ = new QGraphicsScene(this);
-    field_scene_->setSceneRect(0, 0, 0, 0);
-    ui_.field_view->setScene(field_scene_);
+    field_scene_ = std::make_unique<QGraphicsScene>(this);
+    ui_.field_view->setScene(field_scene_.get());
     cell_items_.clear();
 
-    for (int row = 0; row < app_settings_.cells_counter; row++)
+    for (auto row = 0; row < app_settings_.cells_counter; row++)
     {
         QList<cell::CellItem*> cells;
-        for (int col = 0; col < app_settings_.cells_counter; col++)
+        for (auto col = 0; col < app_settings_.cells_counter; col++)
         {
             coord.setX(col);
             coord.setY(row);
 
-            cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, defs::Color(randomizer_->GetRandomValue()), field_scene_));
+            if (field_model.colors.isEmpty())
+            {
+                cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, defs::Color(randomizer_->GetRandomValue())));
+            }
+            else
+            {
+                cells.append(new cell::CellItem(QSize(app_settings_.cell_size, app_settings_.cell_size), coord, defs::Color(field_model.colors.at(row*app_settings_.cells_counter + col).digitValue())));
+            }
 
             field_scene_->addItem(cells.back());
             cells.back()->setPos(app_settings_.cell_size * col, app_settings_.cell_size * row);
@@ -59,14 +65,8 @@ void MainWindow::SaveField()
         return;
     }
 
-    auto field_model = defs::FieldModel{};
-    for (const auto& row : cell_items_)
-    {
-        for (const auto& col : row)
-        {
-            field_model.colors.append(col->GetColor());
-        }
-    }
+    database_proxy_->Delete();
+    const auto field_model = MakeFieldModel();
 
     if (!database_proxy_->Create(field_model))
     {
@@ -74,19 +74,46 @@ void MainWindow::SaveField()
         return;
     }
 
-    ui_.status_bar->showMessage(QString("field was succesfully saved"), 2000);
+    ui_.status_bar->showMessage(QString("field was successfully saved"), 2000);
+}
+
+defs::FieldModel MainWindow::MakeFieldModel()
+{
+    auto field_model = defs::FieldModel{};
+    for (const auto& row : cell_items_)
+    {
+        for (const auto& col : row)
+        {
+            field_model.colors.append(QString::number(int(col->GetColor())));
+        }
+    }
+
+    return field_model;
+}
+
+void MainWindow::LoadField()
+{
+    auto field_model = defs::FieldModel{};
+    if (!database_proxy_->Read(field_model))
+    {
+        QMessageBox::warning(this, app_name_ + " " + app_ver_, QString(tr("can't load field from database")));
+        return;
+    }
+
+    GenerateField(field_model);
+    ui_.status_bar->showMessage(QString("field was successfully loaded"), 2000);
 }
 
 void MainWindow::ReceiveAppSettings(const defs::AppSettings& app_settings)
 {
-    if (app_settings_.path_to_db != app_settings.path_to_db && !database_proxy_->Init(db_type_, app_settings.path_to_db))
+    if (app_settings_.path_to_db != app_settings.path_to_db)
     {
-        QMessageBox::warning(this, app_name_ + " " + app_ver_, QString(tr("invalid path to database")));
-        return;
+        database_proxy_ = std::make_unique<database::DatabaseProxy>();
+        database_proxy_->Init(db_type_, app_settings.path_to_db);
     }
 
     app_settings_ = app_settings;
-    ui_.status_bar->showMessage(QString("settings applied"), 2000);
+    ui_.status_bar->showMessage(QString("settings was successfully applied"), 2000);
 }
 
 void MainWindow::InitFields()
@@ -108,18 +135,14 @@ void MainWindow::InitFields()
     {
         ui_.action_load_field->setEnabled(false);
     }
-
-    field_scene_ = new QGraphicsScene(this);
-    field_scene_->setSceneRect(0, 0, 0, 0);
-    ui_.field_view->setScene(field_scene_);
 }
 
-void MainWindow::MakeConnections()
+void MainWindow::MakeConnections() const
 {
     connect(ui_.action_generate_field, SIGNAL(triggered()), this, SLOT(GenerateField()));
     connect(ui_.action_save_field, SIGNAL(triggered()), this, SLOT(SaveField()));
+    connect(ui_.action_load_field, SIGNAL(triggered()), this, SLOT(LoadField()));
     connect(ui_.action_settings, SIGNAL(triggered()), settings_window_.get(), SLOT(exec()));
-
     connect(settings_window_.get(), SIGNAL(SendAppSettings(const defs::AppSettings&)), this, SLOT(ReceiveAppSettings(const defs::AppSettings&)));
 }
 

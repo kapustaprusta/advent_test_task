@@ -1,8 +1,5 @@
 #pragma once
 
-#include <QPoint>
-#include <QColor>
-#include <QObject>
 #include <QPainter>
 #include <QGraphicsItem>
 
@@ -17,15 +14,15 @@ class CellItem final : public QObject, public QGraphicsItem
 
 public:
     explicit CellItem(const QSize& size, const QPoint& coordinates, const defs::Color& color, QObject* parent = Q_NULLPTR);
-            ~CellItem() = default;
+    ~CellItem() = default;
 
-    defs::Color GetColor();
-    QSize  GetSize();
-    QPoint GetCoordinates();
+    defs::Color GetColor() const;
+    QSize GetSize() const;
+    QPoint GetCoordinates() const;
 
 private:
-    QSize       size_;
-    QPoint      coordinates_;
+    QSize size_;
+    QPoint coordinates_;
     defs::Color color_;
 
     defs::Colors colors_;

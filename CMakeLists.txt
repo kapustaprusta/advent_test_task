@@ -8,8 +8,8 @@ set(CMAKE_AUTOMOC ON   )
 set(CMAKE_AUTOUIC ON   )
 SET(GUI_TYPE      WIN32)
 
-set(CMAKE_PREFIX_PATH          $ENV{Qt} )
-set(CMAKE_AUTOUIC_SEARCH_PATHS res/forms)
+set(CMAKE_PREFIX_PATH          $ENV{QTDIR})
+set(CMAKE_AUTOUIC_SEARCH_PATHS res/forms  )
 
 # additional directories
 include_directories(${CMAKE_BINARY_DIR})
@@ -49,11 +49,8 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/database)
 configure_file(res/database/field.sqlite ${CMAKE_BINARY_DIR}/database/field.sqlite COPYONLY)
 
 # qt5
-qt5_add_resources(SOURCES res/path_finder.qrc)
-
-qt5_wrap_ui(SOURCES res/forms/main_window.ui
-                    res/forms/settins_window.ui
-)
+qt5_add_resources(SOURCES res/path_finder.qrc                                 )
+qt5_wrap_ui      (SOURCES res/forms/main_window.ui res/forms/settins_window.ui)
 
 # executable
 add_executable(path_finder ${GUI_TYPE} ${SOURCES} res/path_finder.rc)

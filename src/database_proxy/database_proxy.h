@@ -2,7 +2,6 @@
 
 #include <QtSql>
 #include <QMutex>
-#include <QString>
 
 #include "../defs/defs.h"
 
@@ -13,7 +12,7 @@ class DatabaseProxy
 {
 public:
     explicit DatabaseProxy();
-            ~DatabaseProxy();
+    ~DatabaseProxy();
 
     bool Init(const QString& db_type, const QString& db_url);
 
@@ -24,7 +23,7 @@ public:
 private:
     std::atomic_bool is_init_;
 
-    QMutex       db_mutex_;
+    QMutex db_mutex_;
     QSqlDatabase db_;
 };
 
