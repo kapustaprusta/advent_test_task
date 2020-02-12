@@ -56,6 +56,10 @@ void MainWindow::GenerateField(const defs::FieldModel& field_model)
         cell_items_.append(cells);
     }
 
+    start_.reset();
+    finish_.reset();
+    route_nodes_.clear();
+
     ConnectWithCells();
 }
 
