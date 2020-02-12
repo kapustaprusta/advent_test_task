@@ -58,7 +58,7 @@ qt5_wrap_ui      (SOURCES res/forms/main_window.ui res/forms/settins_window.ui)
 # executable
 add_executable(path_finder ${GUI_TYPE} ${SOURCES} res/path_finder.rc)
 
-set_target_properties(path_finder PROPERTIES OUTPUT_NAME "Path Finder")
+set_target_properties(path_finder PROPERTIES OUTPUT_NAME "PathFinder")
 
 target_link_libraries(path_finder PUBLIC Qt5::Core
                                   PUBLIC Qt5::Widgets

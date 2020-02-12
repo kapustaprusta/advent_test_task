@@ -36,7 +36,7 @@ private:
 
     const int min_nodes_list_size_ = 2;
 
-    const QString app_name_ = "Path Finder";
+    const QString app_name_ = "PathFinder";
     const QString app_ver_  = "(v1.0.0)";
     const QString db_type_  = "QSQLITE";
 
