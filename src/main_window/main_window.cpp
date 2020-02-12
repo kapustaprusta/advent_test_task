@@ -55,6 +55,8 @@ void MainWindow::GenerateField(const defs::FieldModel& field_model)
 
         cell_items_.append(cells);
     }
+
+    ConnectWithCells();
 }
 
 void MainWindow::SaveField()
@@ -116,6 +118,86 @@ void MainWindow::ReceiveAppSettings(const defs::AppSettings& app_settings)
     ui_.status_bar->showMessage(QString("settings was successfully applied"), 2000);
 }
 
+void MainWindow::ReceiveMetadata(const defs::CellType& type, const QPoint& coordinates)
+{
+    if (type == defs::CellType::START)
+    {
+        if (finish_->x() == coordinates.x() && finish_->y() == coordinates.y())
+        {
+            finish_.reset();
+        }
+
+        if (!start_.has_value())
+        {
+            start_.emplace(coordinates);
+        }
+        else
+        {
+            if (start_->x() != coordinates.x() || start_->y() != coordinates.y())
+            {
+                cell_items_[start_->y()][start_->x()]->Reset();
+                start_.emplace(coordinates);
+            }
+        }
+    }
+    else if (type == defs::CellType::FINISH)
+    {
+        if (start_->x() == coordinates.x() && start_->y() == coordinates.y())
+        {
+            start_.reset();
+        }
+
+        if (!finish_.has_value())
+        {
+            finish_.emplace(coordinates);
+        }
+        else
+        {
+            if (finish_->x() != coordinates.x() || finish_->y() != coordinates.y())
+            {
+                cell_items_[finish_->y()][finish_->x()]->Reset();
+                finish_.emplace(coordinates);
+            }
+        }
+    }
+
+    if (start_.has_value() && finish_.has_value())
+    {
+        BuildRoute();
+    }
+}
+
+void MainWindow::BuildRoute()
+{
+    if (route_nodes_.size() > min_nodes_list_size_)
+    {
+        for (auto point_index = 1; point_index < route_nodes_.size()-1; point_index++)
+        {
+            if (route_nodes_[point_index].x() == start_->x() && route_nodes_[point_index].y() == start_->y() ||
+                route_nodes_[point_index].x() == finish_->x() && route_nodes_[point_index].y() == finish_->y())
+            {
+                continue;
+            }
+
+            cell_items_[route_nodes_[point_index].y()][route_nodes_[point_index].x()]->SetType(defs::CellType::DEFAULT);
+        }
+    }
+
+    route_builder_->Reset(start_.value(), finish_.value());
+    route_nodes_ = route_builder_->Build();
+
+    if (route_nodes_.size() <= 2)
+    {
+        ui_.status_bar->showMessage("can't build the route", 2000);
+        return;
+    }
+
+    for (auto point_index = 1; point_index < route_nodes_.size() - 1; point_index++)
+    {
+        cell_items_[route_nodes_[point_index].y()][route_nodes_[point_index].x()]->SetType(defs::CellType::ROUTE);
+    }
+}
+
 void MainWindow::InitFields()
 {
     settings_manager_ = settings::SettingsManager::MakeInstance();
@@ -130,6 +212,7 @@ void MainWindow::InitFields()
     randomizer_       = std::make_unique<random::Randomizer>(std::uniform_int_distribution<>(0, 1));
     settings_window_  = std::make_unique<settings::SettingsWindow>(app_name_, app_ver_, app_settings_);
     database_proxy_   = std::make_unique<database::DatabaseProxy>();
+    route_builder_    = std::make_unique<route::RouteBuilder>();
 
     if (!database_proxy_->Init(db_type_, app_settings_.path_to_db) || !database_proxy_->Read(defs::FieldModel{}))
     {
@@ -144,6 +227,17 @@ void MainWindow::MakeConnections() const
     connect(ui_.action_load_field, SIGNAL(triggered()), this, SLOT(LoadField()));
     connect(ui_.action_settings, SIGNAL(triggered()), settings_window_.get(), SLOT(exec()));
     connect(settings_window_.get(), SIGNAL(SendAppSettings(const defs::AppSettings&)), this, SLOT(ReceiveAppSettings(const defs::AppSettings&)));
+}
+
+void MainWindow::ConnectWithCells() const
+{
+    for (const auto& row : cell_items_)
+    {
+        for (const auto& col : row)
+        {
+            connect(col, SIGNAL(SendMetadata(const defs::CellType&, const QPoint&)), this, SLOT(ReceiveMetadata(const defs::CellType&, const QPoint&)));
+        }
+    }
 }
 
 } // main_window

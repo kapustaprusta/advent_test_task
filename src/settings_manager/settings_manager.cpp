@@ -112,4 +112,4 @@ QString SettingsManager::GetApplicationName() const
     return app_;
 }
 
-}
+} // settings

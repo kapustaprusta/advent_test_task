@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(path_finder)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_AUTOMOC ON   )
 set(CMAKE_AUTOUIC ON   )
@@ -40,6 +40,9 @@ set(SOURCES
     
     src/randomizer/randomizer.h
     src/randomizer/randomizer.cpp
+
+    src/route_builder/route_builder.h
+    src/route_builder/route_builder.cpp
 
     src/defs/defs.h
 )

@@ -16,6 +16,22 @@ enum class CellType
     DEFAULT
 };
 
+inline QString ConvertCellTypeToStr(const CellType& type)
+{
+    switch (type)
+    {
+        case CellType::START:
+            return "START";
+        case CellType::FINISH:
+            return "FINISH";
+        case  CellType::ROUTE:
+            return "ROUTE";
+        case CellType::DEFAULT:
+        default:
+            return "DEFAULT";
+    }
+}
+
 enum class Color
 {
     BLACK = 0,
@@ -31,9 +47,27 @@ struct Colors
 
     QColor white {  0,   0,   0};
     QColor black {255, 255, 255};
-    QColor green {  0,  51,   0};
+    QColor green {  0, 255,   0};
     QColor yellow{255, 255,  51};
-    QColor blue  {  0,  51, 102};
+    QColor blue  {  0,   0, 255};
+
+    QColor GetColor(const Color& color) const
+    {
+        switch (color)
+        {
+            case Color::BLACK:
+                return black;
+            case Color::BLUE:
+                return blue;
+            case Color::GREEN:
+                return green;
+            case Color::YELLOW:
+                return yellow;
+            case Color::WHITE:
+            default:
+                return white;
+        }
+    }
 };
 
 struct AppSettings
@@ -61,4 +95,4 @@ struct FieldModel
 
 };
 
-}
+} // defs
